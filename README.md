@@ -128,11 +128,108 @@ The starter demonstrates essential onchain game patterns:
 - Clean separation between UI and blockchain logic
 - Performance optimizations built-in
 
+## 🚀 Quick Start - Local Development
+
+### Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Dojo Tools**: Install the complete Dojo toolchain
+  ```bash
+  curl -L https://install.dojoengine.org | bash
+  dojoup
+  ```
+  This installs: `katana` (local blockchain), `sozo` (contract deployment), and `torii` (GraphQL indexer)
+
+- **Node.js & npm**: For frontend development (v18.18+ recommended)
+- **jq**: JSON processor for extracting configuration
+  ```bash
+  brew install jq  # macOS
+  apt-get install jq  # Linux
+  ```
+
+### One-Command Local Development
+
+The project includes a unified development workflow that orchestrates all services:
+
+```bash
+# Install dependencies
+npm install
+
+# Start everything: local chain, deploy contracts, and run client
+npm run dev:local
+```
+
+This single command:
+1. ✅ Validates all dependencies are installed
+2. 🔗 Starts Katana local blockchain (port 5050)
+3. ⏳ Waits for blockchain to be ready
+4. 🚀 Builds and deploys smart contracts
+5. 💾 Extracts and saves the world address
+6. 📊 Starts Torii GraphQL indexer (port 8080)
+7. 🎨 Launches client development server (HTTPS)
+
+### Available Commands
+
+**Core Development:**
+```bash
+npm run dev:local          # Complete local environment (all services)
+npm run clean              # Stop all services and clean generated files
+npm run reset              # Clean + reinstall + restart everything
+```
+
+**Individual Services:**
+```bash
+npm run chain:start        # Start Katana blockchain only
+npm run chain:wait         # Wait for Katana to be ready
+npm run chain:stop         # Stop Katana blockchain
+npm run contracts:build    # Build Cairo contracts
+npm run contracts:deploy   # Build and deploy contracts
+npm run contracts:test     # Run contract tests
+npm run torii:start        # Start Torii indexer
+npm run client:dev         # Start client dev server
+npm run client:build       # Build client for production
+```
+
+**Utilities:**
+```bash
+npm run deps:check         # Verify all dependencies installed
+npm run world:save         # Extract and save world address
+npm run chain:log          # View Katana logs in real-time
+```
+
+### Troubleshooting
+
+**Port Already in Use:**
+```bash
+npm run chain:stop         # Kill any existing Katana process
+lsof -ti:5050 | xargs kill -9  # Force kill port 5050
+lsof -ti:8080 | xargs kill -9  # Force kill port 8080
+```
+
+**Contract Deployment Failed:**
+```bash
+npm run clean              # Clean everything
+npm run contracts:deploy   # Try deploying again
+```
+
+**World Address Not Found:**
+```bash
+# Ensure contracts are deployed first
+npm run contracts:deploy
+npm run world:save
+```
+
+**Dependency Check Fails:**
+- Install Dojo: `curl -L https://install.dojoengine.org | bash && dojoup`
+- Install jq: `brew install jq` (macOS) or `apt-get install jq` (Linux)
+
 ## 🌟 Getting Started
 
-1. **For Frontend Development:** Start with [Client README](./client/README.md)
-2. **For Backend Development:** Check [Contracts README](./contract/README.md)
-3. **For Complete Understanding:** Follow the [Integration Guide Series](./client/docs/)
+1. **For Quick Local Setup:** Follow [Quick Start - Local Development](#-quick-start---local-development) above
+2. **For Frontend Development:** Start with [Client README](./client/README.md)
+3. **For Backend Development:** Check [Contracts README](./contract/README.md)
+4. **For Complete Understanding:** Follow the [Integration Guide Series](./client/docs/)
 
 ## 🔗 Links
 

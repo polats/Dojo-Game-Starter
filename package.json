@@ -1,0 +1,34 @@
+{
+  "name": "dojo-game-starter",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "client"
+  ],
+  "scripts": {
+    "dev:local": "run-s deps:check dev:setup dev:run",
+    "dev:setup": "run-s chain:start chain:wait contracts:deploy world:save",
+    "dev:run": "run-p chain:log torii:start client:dev",
+    "deps:check": "bash scripts/check-deps.sh",
+    "chain:start": "cd contract && katana --dev --dev.no-fee > ../katana.log 2>&1 &",
+    "chain:wait": "wait-on tcp:5050 -t 30000 && echo '✓ Katana is ready'",
+    "chain:log": "tail -f katana.log",
+    "chain:stop": "lsof -ti:5050 | xargs kill -9 || echo 'No Katana process found'",
+    "contracts:build": "cd contract && sozo build",
+    "contracts:deploy": "run-s contracts:build _contracts:migrate",
+    "_contracts:migrate": "cd contract && sozo migrate",
+    "contracts:test": "cd contract && sozo test",
+    "world:save": "jq -r '.world.address' contract/manifest_dev.json > .world-address && echo \"✓ World address saved: $(cat .world-address)\"",
+    "torii:start": "bash scripts/start-torii.sh",
+    "client:dev": "cd client && npm run dev:https",
+    "client:build": "cd client && npm run build",
+    "client:test": "cd client && npm test",
+    "clean": "run-s chain:stop _clean:files",
+    "_clean:files": "rm -rf katana.log contract/target contract/manifest_dev.json .world-address",
+    "reset": "run-s clean install dev:local"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5",
+    "wait-on": "^8.0.5"
+  }
+}
